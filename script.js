@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     // === Logic Constants ===
-    // Simplified estimation factors based on research.
-    // Factor: Monthly Payment (KRW) per 100 Million KRW Land Value
-    // Based on ~600k for 75yo/100M, ~300k for 65yo/100M (Estimation)
     const AGE_FACTORS = {
         60: { life: 230000, term5: 1600000, term10: 850000, term15: 600000 },
         61: { life: 245000, term5: 1630000, term10: 870000, term15: 620000 },
@@ -25,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         78: { life: 593000, term5: 2140000, term10: 1275000, term15: 960000 },
         79: { life: 622000, term5: 2170000, term10: 1300000, term15: 980000 },
         80: { life: 652000, term5: 2200000, term10: 1325000, term15: 1000000 },
-        max: { life: 750000, term5: 2500000, term10: 1500000, term15: 1200000 } // Cap for >80
+        max: { life: 750000, term5: 2500000, term10: 1500000, term15: 1200000 }
     };
 
     // === UI Elements ===
@@ -33,8 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const actualEvalDisplay = document.getElementById('actualEvalAmount');
     const spouseToggle = document.getElementById('spouseToggle');
     const spouseDobGroup = document.getElementById('spouseDobGroup');
-    const form = document.getElementById('pensionForm');
-    const resultsSection = document.getElementById('resultsSection');
+    const calcBtn = document.getElementById('calcBtn');
+
+    // Bottom Sheet Elements
+    const resultSheet = document.getElementById('resultSheet');
+    const sheetOverlay = document.getElementById('sheetOverlay');
+    const closeSheetBtn = document.getElementById('closeSheetBtn');
 
     // === Currency Formatting ===
     landValueInput.addEventListener('input', (e) => {
@@ -73,17 +74,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return mkValue;
     }
 
-    // === Calculation ===
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    // === Open/Close Sheet ===
+    function openSheet() {
+        resultSheet.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
 
+    function closeSheet() {
+        resultSheet.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    sheetOverlay.addEventListener('click', closeSheet);
+    closeSheetBtn.addEventListener('click', closeSheet);
+
+    // === Calculation Trigger ===
+    calcBtn.addEventListener('click', () => {
+        // Simple Validation
+        if (!document.getElementById('ownerDob').value) {
+            alert('생년월일을 입력해주세요.');
+            return;
+        }
+        if (!landValueInput.value) {
+            alert('농지 가격을 입력해주세요.');
+            return;
+        }
+        if (spouseToggle.checked && !document.getElementById('spouseDob').value) {
+            alert('배우자 생년월일을 입력해주세요.');
+            return;
+        }
+
+        calculateAndShow();
+    });
+
+    function calculateAndShow() {
         // 1. Get Inputs
         const dob = new Date(document.getElementById('ownerDob').value);
         const landValue = updateActualValue();
         const hasSpouse = spouseToggle.checked;
-        const spouseDob = hasSpouse ? new Date(document.getElementById('spouseDob').value) : null;
 
-        // 2. Validate Age (Simple Year diff)
+        // 2. Validate Age
         const today = new Date();
         const age = today.getFullYear() - dob.getFullYear();
 
@@ -91,76 +121,44 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('농지연금 가입은 만 60세 이상부터 가능합니다.');
             return;
         }
-        
-        // 3. Determine Factor
-        // Use spouse age for calculation if spouse is younger and survivor option selected (simplified logic: check younger)
-        let calcAge = age;
-        if (hasSpouse && spouseDob) {
-            const spouseAge = today.getFullYear() - spouseDob.getFullYear();
-            if (spouseAge < calcAge) {
-                // Usually survivor pension reduces amount, here simplified by taking younger age if signifiant
-                // or just apply a reduction factor. Let's just use a flat reduction for 'Survivor' logic simplicity
-            }
-        }
 
-        // Clamp age to 80 for factors (or use lookup)
-        let factorKey = calcAge;
-        if (calcAge > 80) factorKey = 80;
-        if (calcAge < 60) factorKey = 60; // Should not happen due to check above but for safety
-        
-        let factors = AGE_FACTORS[factorKey] || AGE_FACTORS[80];
+        // 3. Determine Factor
+        let calcAge = age;
+        if (calcAge > 80) calcAge = 80;
+
+        // Fallback for logic consistency
+        if (!AGE_FACTORS[calcAge]) calcAge = 80;
+
+        let factors = AGE_FACTORS[calcAge];
 
         // 4. Calculate
-        // Payout = (LandValue / 100,000,000) * Factor
         const unitValue = landValue / 100000000;
-        
+
         let lifeAmount = Math.floor(factors.life * unitValue);
         let term5Amount = Math.floor(factors.term5 * unitValue);
         let term10Amount = Math.floor(factors.term10 * unitValue);
         let term15Amount = Math.floor(factors.term15 * unitValue);
 
-        // Apply max cap (3 million KRW)
         const MAX_PAYOUT = 3000000;
         if (lifeAmount > MAX_PAYOUT) lifeAmount = MAX_PAYOUT;
         if (term5Amount > MAX_PAYOUT) term5Amount = MAX_PAYOUT;
         if (term10Amount > MAX_PAYOUT) term10Amount = MAX_PAYOUT;
         if (term15Amount > MAX_PAYOUT) term15Amount = MAX_PAYOUT;
-        
-        // Survivor Penalty (Simplified: -20% if spouse included for simple estimation vs complicated actuarial)
-        // Note: Actual logic is complex. This is an estimation tool.
+
         if (hasSpouse) {
-            lifeAmount = Math.floor(lifeAmount * 0.85); // 15% reduction for survivor coverage estimation
+            lifeAmount = Math.floor(lifeAmount * 0.85);
         }
 
         // 5. Update UI
-        document.getElementById('resAge').textContent = `만 ${age}세`;
-        document.getElementById('resEvalAmount').textContent = `${landValue.toLocaleString()}원`;
+        document.getElementById('resAge').textContent = `${age}`;
+        document.getElementById('resEvalAmount').textContent = `${(landValue / 100000000).toFixed(1)}억`; // Shorten for chips
 
-        animateValue('valLifetime', lifeAmount);
-        animateValue('valTerm5', term5Amount);
-        animateValue('valTerm10', term10Amount);
-        animateValue('valTerm15', term15Amount);
+        document.getElementById('valLifetime').textContent = lifeAmount.toLocaleString();
+        document.getElementById('valTerm5').textContent = term5Amount.toLocaleString();
+        document.getElementById('valTerm10').textContent = term10Amount.toLocaleString();
+        document.getElementById('valTerm15').textContent = term15Amount.toLocaleString();
 
-        // Show Results
-        resultsSection.classList.remove('hidden');
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    function animateValue(id, value) {
-        const el = document.getElementById(id);
-        const duration = 1000;
-        const start = 0;
-        let startTimestamp = null;
-
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const current = Math.floor(progress * (value - start) + start);
-            el.textContent = current.toLocaleString();
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
+        // 6. Show Sheet
+        openSheet();
     }
 });
