@@ -28,6 +28,8 @@ body {
     overflow-x: hidden;
     padding-bottom: calc(80px + var(--safe-area-bottom));
     /* Space for fixed button */
+    font-size: clamp(16px, 1.2vw, 18px);
+    /* Adaptive Font Size */
 }
 
 /* Background */
@@ -83,7 +85,7 @@ body {
 }
 
 .app-title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
@@ -92,17 +94,18 @@ body {
     padding: 24px 20px;
     max-width: 600px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
 .section-desc {
     color: var(--color-text-sub);
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin-bottom: 32px;
 }
 
@@ -123,8 +126,7 @@ input[type="date"],
 input[type="tel"],
 input[type="text"] {
     width: 100%;
-    height: 52px;
-    /* Touch friendly */
+    height: 56px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 12px;
@@ -149,8 +151,7 @@ input:focus {
 .currency-input-wrapper input {
     padding-right: 40px;
     text-align: right;
-    font-size: 1.3rem;
-    /* Larger numbers */
+    font-size: 1.4rem;
     font-weight: 600;
 }
 
@@ -186,7 +187,7 @@ input:focus {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    height: 52px;
+    height: 56px;
     position: relative;
     cursor: pointer;
     overflow: hidden;
@@ -255,7 +256,9 @@ input:focus {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100%;
+    min-height: 80px;
     transition: all 0.2s;
 }
 
@@ -322,6 +325,9 @@ input:focus {
     z-index: 200;
     visibility: hidden;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    /* Integrate centering for larger screens */
 }
 
 .bottom-sheet.active {
@@ -347,10 +353,10 @@ input:focus {
 .sheet-content {
     position: absolute;
     bottom: 0;
-    left: 0;
     width: 100%;
+    max-width: 600px;
+    /* Default max for mobile, overridden later */
     max-height: 90vh;
-    /* Don't cover full screen */
     background: #1a1d24;
     border-radius: 24px 24px 0 0;
     transform: translateY(100%);
@@ -454,13 +460,9 @@ input:focus {
 }
 
 .item-amount {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-primary);
-}
-
-.item-amount strong {
-    font-weight: 700;
 }
 
 .result-grid {
@@ -486,7 +488,7 @@ input:focus {
 
 .result-item-small .val {
     display: block;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -522,15 +524,235 @@ input:focus {
 .hidden {
     display: none;
 }
+
 /* Exit Modal */
-.exit-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-.exit-modal.visible { opacity: 1; pointer-events: auto; }
-.modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-.modal-content { background: #1e1e1e; border: 1px solid var(--color-border); border-radius: 20px; width: 100%; max-width: 320px; padding: 24px; position: relative; z-index: 2; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.2s; }
-.exit-modal.visible .modal-content { transform: scale(1); }
-.modal-title { font-size: 1.2rem; margin-bottom: 20px; color: white; }
-.ad-container { background: #121212; border-radius: 8px; margin-bottom: 24px; min-height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.modal-buttons { display: flex; gap: 12px; }
-.modal-buttons button { flex: 1; padding: 14px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; }
-.btn-cancel { background: #333; color: white; }
-.btn-confirm { background: #ef4444; color: white; }
+.exit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.exit-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #1e1e1e;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 320px;
+    padding: 24px;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.2s;
+}
+
+.exit-modal.visible .modal-content {
+    transform: scale(1);
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.ad-container {
+    background: #121212;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #333;
+    color: white;
+}
+
+.btn-confirm {
+    background: #ef4444;
+    color: white;
+}
+
+/* ==========================================================================
+   Responsive & Tablet Optimizations
+   ========================================================================== */
+
+/* Tablet & Desktop (min-width: 768px) */
+@media screen and (min-width: 768px) {
+    .app-content {
+        max-width: 720px;
+        padding-top: 40px;
+    }
+
+    /* Grid Layout for Inputs on larger screens */
+    #pensionForm {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+    }
+
+    /* Spans */
+    .input-group {
+        margin-bottom: 0;
+    }
+
+    .input-group:nth-child(1) {
+        grid-column: 1 / 2;
+    }
+
+    /* Dob */
+    .input-group:nth-child(2) {
+        grid-column: 2 / 3;
+    }
+
+    /* Spouse Toggle */
+    .input-group:nth-child(3) {
+        grid-column: 2 / 3;
+    }
+
+    /* Spouse Dob (Conditional) */
+    .input-group:nth-child(4) {
+        grid-column: 1 / -1;
+    }
+
+    /* Eval Method (Full width) */
+    .input-group:nth-child(5) {
+        grid-column: 1 / -1;
+    }
+
+    /* Land Value (Full width) */
+
+    .radio-group-modern {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bottom-spacer {
+        display: none;
+    }
+
+    /* Centered "Bottom Sheet" acts more like a Modal on Tablet */
+    .sheet-content {
+        bottom: 50%;
+        left: 50%;
+        transform: translate(-50%, 50%) !important;
+        /* Center override */
+        max-width: 500px;
+        max-height: 85vh;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        pointer-events: none;
+    }
+
+    .bottom-sheet.active .sheet-content {
+        transform: translate(-50%, -50%) !important;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .sheet-handle-bar {
+        display: none;
+    }
+
+    /* Hide handle on desktop */
+    .sheet-footer {
+        border-radius: 0 0 24px 24px;
+    }
+
+    /* Floating Action Button for Tablet? Or just standard centered button */
+    .fixed-bottom-bar {
+        position: static;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 40px 0;
+        grid-column: 1 / -1;
+        /* Full width in grid */
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-primary {
+        max-width: 300px;
+        box-shadow: 0 10px 20px rgba(0, 230, 118, 0.2);
+    }
+
+    body {
+        padding-bottom: 0px;
+        /* Reset padding */
+    }
+}
+
+/* Landscape Mode (Mobile Landscape) */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    .app-bar {
+        height: 48px;
+    }
+
+    .app-content {
+        padding-top: 10px;
+    }
+
+    .fixed-bottom-bar {
+        padding: 8px 16px;
+    }
+
+    .btn-primary {
+        height: 44px;
+    }
+
+    .bottom-sheet .sheet-content {
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
