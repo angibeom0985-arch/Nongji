@@ -1,16 +1,33 @@
 :root {
+    /* --- Light Theme (Default) --- */
+    --color-bg: #f8f9fa;
+    --color-surface: #ffffff;
+    --color-surface-lighter: #f1f3f5;
+    --color-primary: #009855;
+    /* Darker Green for Light Mode contrast */
+    --color-primary-light: #e6fcf5;
+    --color-text-main: #212529;
+    --color-text-sub: #868e96;
+    --color-border: #dee2e6;
+    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+    --font-main: 'Pretendard', sans-serif;
+}
+
+/* --- Dark Mode Variables --- */
+body.dark-mode {
     --color-bg: #121212;
     --color-surface: #1e1e1e;
     --color-surface-lighter: #2c2c2c;
     --color-primary: #00e676;
-    /* Bright Green */
-    --color-primary-dark: #00b35a;
+    /* Bright Green for Dark Mode */
+    --color-primary-light: rgba(0, 230, 118, 0.1);
     --color-text-main: #ffffff;
     --color-text-sub: #a0a0a0;
     --color-border: #333333;
-    --safe-area-top: env(safe-area-inset-top, 0px);
-    --safe-area-bottom: env(safe-area-inset-bottom, 20px);
-    --font-main: 'Pretendard', sans-serif;
+    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -27,12 +44,11 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     padding-bottom: calc(80px + var(--safe-area-bottom));
-    /* Space for fixed button */
     font-size: clamp(16px, 1.2vw, 18px);
-    /* Adaptive Font Size */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Background */
+/* Background Globes (Visible only in dark or adapted for light?) */
 .background-globes {
     position: fixed;
     top: 0;
@@ -41,6 +57,12 @@ body {
     height: 100vh;
     z-index: -1;
     overflow: hidden;
+    opacity: 0.5;
+}
+
+body:not(.dark-mode) .background-globes {
+    opacity: 0.1;
+    /* Faint in light mode */
 }
 
 .globe {
@@ -53,7 +75,7 @@ body {
 .globe-1 {
     width: 300px;
     height: 300px;
-    background: #00e676;
+    background: var(--color-primary);
     top: -50px;
     right: -100px;
     opacity: 0.1;
@@ -62,7 +84,7 @@ body {
 .globe-2 {
     width: 250px;
     height: 250px;
-    background: #2979ff;
+    background: #4dabf7;
     bottom: 10%;
     left: -50px;
     opacity: 0.1;
@@ -76,17 +98,57 @@ body {
     height: calc(56px + var(--safe-area-top));
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(18, 18, 18, 0.85);
+    justify-content: space-between;
+    /* Space for toggle */
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    /* Light default */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--color-border);
     z-index: 100;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+body.dark-mode .app-bar {
+    background: rgba(18, 18, 18, 0.85);
 }
 
 .app-title {
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 700;
+}
+
+/* Theme Toggle */
+.theme-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-btn .icon-moon {
+    display: none;
+}
+
+.theme-btn .icon-sun {
+    display: none;
+}
+
+/* In Light mode, show moon to switch to dark */
+body:not(.dark-mode) .theme-btn .icon-moon {
+    display: block;
+}
+
+/* In Dark mode, show sun to switch to light */
+body.dark-mode .theme-btn .icon-sun {
+    display: block;
 }
 
 /* Main Content */
@@ -101,6 +163,7 @@ body {
     font-size: 1.6rem;
     font-weight: 700;
     margin-bottom: 8px;
+    color: var(--color-text-main);
 }
 
 .section-desc {
@@ -117,9 +180,10 @@ body {
 .input-group label {
     display: block;
     font-size: 0.95rem;
-    color: #ccc;
-    margin-bottom: 10px;
-    font-weight: 500;
+    color: var(--color-text-sub);
+    margin-bottom: 8px;
+    /* Reduced gap */
+    font-weight: 600;
 }
 
 input[type="date"],
@@ -132,14 +196,23 @@ input[type="text"] {
     border-radius: 12px;
     padding: 0 16px;
     font-size: 1.1rem;
-    color: white;
+    color: var(--color-text-main);
     font-family: var(--font-main);
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-main);
 }
 
 input:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+/* Fix Calendar Icon Visibility */
+/* In Light mode, default icon is fine. In Dark mode, invert it. */
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
 }
 
 .currency-input-wrapper {
@@ -152,13 +225,14 @@ input:focus {
     padding-right: 40px;
     text-align: right;
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .currency-unit {
     position: absolute;
     right: 16px;
     color: var(--color-text-sub);
+    pointer-events: none;
 }
 
 .input-hint {
@@ -170,10 +244,10 @@ input:focus {
 
 .highlight-text {
     color: var(--color-primary);
-    font-weight: 600;
+    font-weight: 700;
 }
 
-/* Toggle Switch */
+/* Fixed Toggle Switch Overlap */
 .toggle-switch-container {
     width: 100%;
 }
@@ -191,6 +265,7 @@ input:focus {
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    box-shadow: var(--shadow-main);
 }
 
 .toggle-text {
@@ -202,6 +277,8 @@ input:focus {
     z-index: 2;
     transition: color 0.3s;
     color: var(--color-text-sub);
+    /* Prevent overlap */
+    position: relative;
 }
 
 .toggle-handle {
@@ -216,9 +293,13 @@ input:focus {
     z-index: 1;
 }
 
+body.dark-mode .toggle-handle {
+    background: #333;
+}
+
 .toggle-input:checked+.toggle-label .toggle-handle {
     transform: translateX(100%);
-    background: rgba(0, 230, 118, 0.15);
+    background: var(--color-primary-light);
     border: 1px solid var(--color-primary);
 }
 
@@ -228,7 +309,8 @@ input:focus {
 }
 
 .toggle-input:not(:checked)+.toggle-label .toggle-text.off {
-    color: white;
+    color: var(--color-text-main);
+    font-weight: 700;
 }
 
 /* Radio Cards */
@@ -260,12 +342,14 @@ input:focus {
     height: 100%;
     min-height: 80px;
     transition: all 0.2s;
+    box-shadow: var(--shadow-main);
 }
 
 .radio-title {
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 4px;
+    color: var(--color-text-main);
 }
 
 .radio-desc {
@@ -275,7 +359,7 @@ input:focus {
 
 .radio-card input:checked+.radio-content {
     border-color: var(--color-primary);
-    background: rgba(0, 230, 118, 0.05);
+    background: var(--color-primary-light);
 }
 
 .radio-card input:checked+.radio-content .radio-title {
@@ -292,14 +376,16 @@ input:focus {
     padding: 12px 20px calc(12px + var(--safe-area-bottom));
     border-top: 1px solid var(--color-border);
     z-index: 90;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+    /* Lighter shadow */
+    transition: background-color 0.3s;
 }
 
 .btn-primary {
     width: 100%;
     height: 56px;
     background: var(--color-primary);
-    color: #000;
+    color: #ffffff;
     border: none;
     border-radius: 16px;
     font-size: 1.1rem;
@@ -308,7 +394,7 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s;
+    transition: transform 0.1s, opacity 0.2s;
 }
 
 .btn-primary:active {
@@ -327,7 +413,6 @@ input:focus {
     pointer-events: none;
     display: flex;
     justify-content: center;
-    /* Integrate centering for larger screens */
 }
 
 .bottom-sheet.active {
@@ -355,14 +440,14 @@ input:focus {
     bottom: 0;
     width: 100%;
     max-width: 600px;
-    /* Default max for mobile, overridden later */
     max-height: 90vh;
-    background: #1a1d24;
+    background: var(--color-bg);
     border-radius: 24px 24px 0 0;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     display: flex;
     flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-sheet.active .sheet-content {
@@ -378,7 +463,7 @@ input:focus {
 .sheet-handle {
     width: 40px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--color-border);
     border-radius: 4px;
 }
 
@@ -387,11 +472,12 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .sheet-header h3 {
     font-size: 1.3rem;
+    color: var(--color-text-main);
 }
 
 .close-btn {
@@ -415,7 +501,8 @@ input:focus {
 
 .chip {
     padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.9rem;
     color: var(--color-text-sub);
@@ -427,16 +514,17 @@ input:focus {
 }
 
 .result-item {
-    background: #252830;
+    background: var(--color-surface);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-main);
 }
 
 .result-item.highlight {
-    background: linear-gradient(135deg, rgba(0, 230, 118, 0.1), rgba(0, 0, 0, 0));
-    border-color: rgba(0, 230, 118, 0.3);
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
 }
 
 .item-header {
@@ -452,7 +540,7 @@ input:focus {
 
 .badge-best {
     background: var(--color-primary);
-    color: black;
+    color: white;
     font-size: 0.75rem;
     padding: 2px 8px;
     border-radius: 4px;
@@ -472,11 +560,11 @@ input:focus {
 }
 
 .result-item-small {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-surface);
     padding: 12px;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
 }
 
 .result-item-small .label {
@@ -490,12 +578,13 @@ input:focus {
     display: block;
     font-size: 1rem;
     font-weight: 600;
+    color: var(--color-text-main);
 }
 
 .disclaimer-box {
     margin-top: 24px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--color-surface-lighter);
     border-radius: 8px;
     font-size: 0.75rem;
     color: var(--color-text-sub);
@@ -504,8 +593,8 @@ input:focus {
 
 .sheet-footer {
     padding: 20px 24px calc(20px + var(--safe-area-bottom));
-    background: #1a1d24;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
 }
 
 .btn-secondary {
@@ -514,8 +603,9 @@ input:focus {
     justify-content: center;
     width: 100%;
     height: 52px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
     text-decoration: none;
     border-radius: 12px;
     font-weight: 600;
@@ -553,12 +643,12 @@ input:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
 }
 
 .modal-content {
-    background: #1e1e1e;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 20px;
     width: 100%;
@@ -567,7 +657,7 @@ input:focus {
     position: relative;
     z-index: 2;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     transform: scale(0.9);
     transition: transform 0.2s;
 }
@@ -579,11 +669,11 @@ input:focus {
 .modal-title {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: white;
+    color: var(--color-text-main);
 }
 
 .ad-container {
-    background: #121212;
+    background: var(--color-surface-lighter);
     border-radius: 8px;
     margin-bottom: 24px;
     min-height: 250px;
@@ -608,8 +698,8 @@ input:focus {
 }
 
 .btn-cancel {
-    background: #333;
-    color: white;
+    background: var(--color-surface-lighter);
+    color: var(--color-text-main);
 }
 
 .btn-confirm {
@@ -617,18 +707,13 @@ input:focus {
     color: white;
 }
 
-/* ==========================================================================
-   Responsive & Tablet Optimizations
-   ========================================================================== */
-
-/* Tablet & Desktop (min-width: 768px) */
+/* Responsive Overrides */
 @media screen and (min-width: 768px) {
     .app-content {
         max-width: 720px;
         padding-top: 40px;
     }
 
-    /* Grid Layout for Inputs on larger screens */
     #pensionForm {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -636,7 +721,6 @@ input:focus {
         align-items: start;
     }
 
-    /* Spans */
     .input-group {
         margin-bottom: 0;
     }
@@ -645,27 +729,21 @@ input:focus {
         grid-column: 1 / 2;
     }
 
-    /* Dob */
     .input-group:nth-child(2) {
         grid-column: 2 / 3;
     }
 
-    /* Spouse Toggle */
     .input-group:nth-child(3) {
         grid-column: 2 / 3;
     }
 
-    /* Spouse Dob (Conditional) */
     .input-group:nth-child(4) {
         grid-column: 1 / -1;
     }
 
-    /* Eval Method (Full width) */
     .input-group:nth-child(5) {
         grid-column: 1 / -1;
     }
-
-    /* Land Value (Full width) */
 
     .radio-group-modern {
         grid-template-columns: 1fr 1fr;
@@ -675,16 +753,14 @@ input:focus {
         display: none;
     }
 
-    /* Centered "Bottom Sheet" acts more like a Modal on Tablet */
     .sheet-content {
         bottom: 50%;
         left: 50%;
         transform: translate(-50%, 50%) !important;
-        /* Center override */
         max-width: 500px;
         max-height: 85vh;
         border-radius: 24px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
         opacity: 0;
         transition: opacity 0.3s, transform 0.3s;
         pointer-events: none;
@@ -700,12 +776,10 @@ input:focus {
         display: none;
     }
 
-    /* Hide handle on desktop */
     .sheet-footer {
         border-radius: 0 0 24px 24px;
     }
 
-    /* Floating Action Button for Tablet? Or just standard centered button */
     .fixed-bottom-bar {
         position: static;
         background: transparent;
@@ -713,23 +787,20 @@ input:focus {
         box-shadow: none;
         padding: 40px 0;
         grid-column: 1 / -1;
-        /* Full width in grid */
         display: flex;
         justify-content: center;
     }
 
     .btn-primary {
         max-width: 300px;
-        box-shadow: 0 10px 20px rgba(0, 230, 118, 0.2);
+        box-shadow: 0 10px 20px rgba(0, 152, 85, 0.2);
     }
 
     body {
         padding-bottom: 0px;
-        /* Reset padding */
     }
 }
 
-/* Landscape Mode (Mobile Landscape) */
 @media screen and (orientation: landscape) and (max-height: 600px) {
     .app-bar {
         height: 48px;
@@ -750,9 +821,5 @@ input:focus {
     .bottom-sheet .sheet-content {
         max-height: 100vh;
         border-radius: 0;
-    }
-
-    .result-grid {
-        grid-template-columns: 1fr 1fr 1fr;
     }
 }

@@ -25,6 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
         max: { life: 750000, term5: 2500000, term10: 1500000, term15: 1200000 }
     };
 
+    // === Theme Logic ===
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme');
+
+    // Default to Light if no save, or respect save
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
     // === UI Elements ===
     const landValueInput = document.getElementById('landValue');
     const actualEvalDisplay = document.getElementById('actualEvalAmount');
@@ -124,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Calculate Logic
         let calcAge = age;
         if (calcAge > 80) calcAge = 80;
         if (!AGE_FACTORS[calcAge]) calcAge = 80;
@@ -147,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lifeAmount = Math.floor(lifeAmount * 0.85);
         }
 
-        // Update UI
         document.getElementById('resAge').textContent = `${age}`;
         document.getElementById('resEvalAmount').textContent = `${(landValue / 100000000).toFixed(1)}억`;
         document.getElementById('valLifetime').textContent = lifeAmount.toLocaleString();
@@ -159,29 +172,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === Exit Logic (History API) ===
-    // Initialize History
     if (window.history && window.history.pushState) {
         window.history.pushState({ page: 'home' }, '', '');
 
         window.addEventListener('popstate', (event) => {
-            // Check if result sheet is open, close it first
             if (resultSheet.classList.contains('active')) {
                 closeSheet();
-                // Push history back again so we are still in "app" state
                 window.history.pushState({ page: 'home' }, '', '');
             } else {
-                // Determine if we should show exit modal
-                // If modal is already visible?
                 if (exitModal.classList.contains('visible')) {
-                    // If modal visible and back pressed again -> actually exit or just keep showing?
-                    // Typically 'stay' means close modal.
-                    // For now, let's keep showing modal or assume this popstate is for exit
-                    // But to block exit, we must push state again.
                     window.history.pushState({ page: 'modal' }, '', '');
                 } else {
-                    // Show Exit Modal
                     showExitModal();
-                    // Push state to override the "back" action effectively
                     window.history.pushState({ page: 'modal' }, '', '');
                 }
             }
@@ -190,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showExitModal() {
         exitModal.classList.remove('hidden');
-        // Small delay to allow display flex to apply before opacity transition
         requestAnimationFrame(() => {
             exitModal.classList.add('visible');
         });
@@ -205,15 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stayBtn.addEventListener('click', () => {
         hideExitModal();
-        // Ensure we have history state
-        // window.history.pushState({ page: 'home' }, '', ''); // Might be redundant if popstate logic handles it
     });
 
     exitBtn.addEventListener('click', () => {
-        // Try clear history and close
-        // In WebView, window.close() might need interface injection
         window.close();
-        // If webview interface exists
         if (window.Android) {
             window.Android.closeApp();
         } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.closeApp) {
