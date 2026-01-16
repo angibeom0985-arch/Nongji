@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="내 농지로 받는 평생 월급, 농지연금 예상 수령액을 지금 바로 확인해보세요.">
+    <title>농지연금 계산기 | 든든한 노후의 시작</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
+    </div>
+
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo">Farmland Pension <span class="logo-accent">Calculator</span></h1>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container layout-grid">
+            <section class="hero-section">
+                <span class="badge">2026년 최신 기준</span>
+                <h2 class="hero-title">내 농지로 만드는<br><strong>제2의 월급 통장</strong></h2>
+                <p class="hero-description">
+                    평생 일군 농지, 이제는 편안한 노후 자금이 됩니다.<br>
+                    복잡한 계산 없이 간편하게 예상 수령액을 확인하세요.
+                </p>
+                <div class="features">
+                    <div class="feature-item">
+                        <span class="icon">💰</span>
+                        <div class="text">
+                            <strong>최대 월 300만원</strong>
+                            <span>든든한 노후 생활비</span>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🌾</span>
+                        <div class="text">
+                            <strong>농사/임대 가능</strong>
+                            <span>연금 받으며 추가 수익</span>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🏛️</span>
+                        <div class="text">
+                            <strong>정부 보증</strong>
+                            <span>한국농어촌공사 지급</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="calculator-card glass-panel">
+                <div class="card-header">
+                    <h3>연금 조회 정보 입력</h3>
+                    <p class="required-notice">* 필수 입력 항목입니다</p>
+                </div>
+                
+                <form id="pensionForm">
+                    <div class="input-group">
+                        <label for="ownerDob">생년월일 (소유자) <span class="required">*</span></label>
+                        <input type="date" id="ownerDob" required>
+                        <p class="input-hint" id="ageHint">만 60세 이상 가입 가능</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>배우자 승계 여부 <span class="required">*</span></label>
+                        <div class="toggle-switch-container">
+                            <input type="checkbox" id="spouseToggle" class="toggle-input">
+                            <label for="spouseToggle" class="toggle-label">
+                                <span class="toggle-text on">승계</span>
+                                <span class="toggle-text off">비승계</span>
+                                <span class="toggle-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="input-group hidden" id="spouseDobGroup">
+                        <label for="spouseDob">생년월일 (배우자) <span class="required">*</span></label>
+                        <input type="date" id="spouseDob">
+                    </div>
+
+                    <div class="input-group">
+                        <label>농지 평가 방식 <span class="required">*</span></label>
+                        <div class="radio-group-modern">
+                            <label class="radio-card active">
+                                <input type="radio" name="evalMethod" value="public" checked>
+                                <span class="radio-content">
+                                    <span class="radio-title">개별공시지가</span>
+                                    <span class="radio-desc">평가율 100%</span>
+                                </span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="evalMethod" value="appraised">
+                                <span class="radio-content">
+                                    <span class="radio-title">감정평가액</span>
+                                    <span class="radio-desc">평가율 90%</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="landValue">농지 가격 (원) <span class="required">*</span></label>
+                        <div class="currency-input-wrapper">
+                            <input type="text" id="landValue" placeholder="예: 100,000,000" required>
+                            <span class="currency-unit">원</span>
+                        </div>
+                        <p class="input-hint">실제 평가금액: <span id="actualEvalAmount">0</span>원</p>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">예상 연금 조회하기</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                    
+                    <div class="disclaimer">
+                        본 조회 결과는 예상치이며, 실제 연금액은 한국농어촌공사의 심사에 따라 달라질 수 있습니다.
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <section id="resultsSection" class="results-section hidden">
+            <div class="container">
+                <div class="results-header">
+                    <h2>예상 월 수령액</h2>
+                    <p>설계하신 조건에 따른 예상 결과입니다.</p>
+                </div>
+
+                <div class="results-grid">
+                    <div class="adjust-box glass-panel">
+                        <h4>입력 조건 요약</h4>
+                        <ul class="summary-list">
+                            <li><span>기준 연령</span> <strong id="resAge">-세</strong></li>
+                            <li><span>적용 금리</span> <strong>고정 2.0% 가정</strong></li>
+                            <li><span>평가 금액</span> <strong id="resEvalAmount">-원</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="result-card highlight">
+                        <div class="card-badge">인기</div>
+                        <h3>종신형 <small>(정액형)</small></h3>
+                        <p class="desc">평생동안 매월 일정 금액을 지급받는 방식</p>
+                        <div class="amount-display">
+                            <span class="unit">월</span>
+                            <span class="amount" id="valLifetime">-</span>
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>기간형 <small>(5년)</small></h3>
+                        <p class="desc">5년 동안 매월 일정 금액 지급</p>
+                        <div class="amount-display">
+                            <span class="unit">월</span>
+                            <span class="amount" id="valTerm5">-</span>
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>기간형 <small>(10년)</small></h3>
+                        <p class="desc">10년 동안 매월 일정 금액 지급</p>
+                        <div class="amount-display">
+                            <span class="unit">월</span>
+                            <span class="amount" id="valTerm10">-</span>
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>기간형 <small>(15년)</small></h3>
+                        <p class="desc">15년 동안 매월 일정 금액 지급</p>
+                        <div class="amount-display">
+                            <span class="unit">월</span>
+                            <span class="amount" id="valTerm15">-</span>
+                            <span class="unit">원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-banner">
+                    <div class="cta-content">
+                        <h3>더 정확한 상담이 필요하신가요?</h3>
+                        <p>한국농어촌공사 농지은행에서 전문가와 상담해보세요.</p>
+                    </div>
+                    <a href="https://www.fbo.or.kr/" target="_blank" class="btn-secondary">농지은행 바로가기</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 Farmland Pension Calculator. Unofficial Tool.</p>
+            <p class="footer-note">이 사이트는 한국농어촌공사의 공식 웹사이트가 아닙니다. 제공되는 정보는 참고용 시뮬레이션입니다.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
