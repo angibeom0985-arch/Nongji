@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const sheetOverlay = document.getElementById('sheetOverlay');
     const closeSheetBtn = document.getElementById('closeSheetBtn');
 
+    // Exit Modal Elements
+    const exitModal = document.getElementById('exitModal');
+    const stayBtn = document.getElementById('stayBtn');
+    const exitBtn = document.getElementById('exitBtn');
+
     // === Currency Formatting ===
     landValueInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/[^0-9]/g, '');
@@ -77,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === Open/Close Sheet ===
     function openSheet() {
         resultSheet.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
     }
 
     function closeSheet() {
@@ -90,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Calculation Trigger ===
     calcBtn.addEventListener('click', () => {
-        // Simple Validation
         if (!document.getElementById('ownerDob').value) {
             alert('생년월일을 입력해주세요.');
             return;
@@ -108,12 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function calculateAndShow() {
-        // 1. Get Inputs
         const dob = new Date(document.getElementById('ownerDob').value);
         const landValue = updateActualValue();
         const hasSpouse = spouseToggle.checked;
 
-        // 2. Validate Age
         const today = new Date();
         const age = today.getFullYear() - dob.getFullYear();
 
@@ -122,16 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 3. Determine Factor
+        // Calculate Logic
         let calcAge = age;
         if (calcAge > 80) calcAge = 80;
-
-        // Fallback for logic consistency
         if (!AGE_FACTORS[calcAge]) calcAge = 80;
 
         let factors = AGE_FACTORS[calcAge];
-
-        // 4. Calculate
         const unitValue = landValue / 100000000;
 
         let lifeAmount = Math.floor(factors.life * unitValue);
@@ -149,16 +147,77 @@ document.addEventListener('DOMContentLoaded', () => {
             lifeAmount = Math.floor(lifeAmount * 0.85);
         }
 
-        // 5. Update UI
+        // Update UI
         document.getElementById('resAge').textContent = `${age}`;
-        document.getElementById('resEvalAmount').textContent = `${(landValue / 100000000).toFixed(1)}억`; // Shorten for chips
-
+        document.getElementById('resEvalAmount').textContent = `${(landValue / 100000000).toFixed(1)}억`;
         document.getElementById('valLifetime').textContent = lifeAmount.toLocaleString();
         document.getElementById('valTerm5').textContent = term5Amount.toLocaleString();
         document.getElementById('valTerm10').textContent = term10Amount.toLocaleString();
         document.getElementById('valTerm15').textContent = term15Amount.toLocaleString();
 
-        // 6. Show Sheet
         openSheet();
     }
+
+    // === Exit Logic (History API) ===
+    // Initialize History
+    if (window.history && window.history.pushState) {
+        window.history.pushState({ page: 'home' }, '', '');
+
+        window.addEventListener('popstate', (event) => {
+            // Check if result sheet is open, close it first
+            if (resultSheet.classList.contains('active')) {
+                closeSheet();
+                // Push history back again so we are still in "app" state
+                window.history.pushState({ page: 'home' }, '', '');
+            } else {
+                // Determine if we should show exit modal
+                // If modal is already visible?
+                if (exitModal.classList.contains('visible')) {
+                    // If modal visible and back pressed again -> actually exit or just keep showing?
+                    // Typically 'stay' means close modal.
+                    // For now, let's keep showing modal or assume this popstate is for exit
+                    // But to block exit, we must push state again.
+                    window.history.pushState({ page: 'modal' }, '', '');
+                } else {
+                    // Show Exit Modal
+                    showExitModal();
+                    // Push state to override the "back" action effectively
+                    window.history.pushState({ page: 'modal' }, '', '');
+                }
+            }
+        });
+    }
+
+    function showExitModal() {
+        exitModal.classList.remove('hidden');
+        // Small delay to allow display flex to apply before opacity transition
+        requestAnimationFrame(() => {
+            exitModal.classList.add('visible');
+        });
+    }
+
+    function hideExitModal() {
+        exitModal.classList.remove('visible');
+        setTimeout(() => {
+            exitModal.classList.add('hidden');
+        }, 200);
+    }
+
+    stayBtn.addEventListener('click', () => {
+        hideExitModal();
+        // Ensure we have history state
+        // window.history.pushState({ page: 'home' }, '', ''); // Might be redundant if popstate logic handles it
+    });
+
+    exitBtn.addEventListener('click', () => {
+        // Try clear history and close
+        // In WebView, window.close() might need interface injection
+        window.close();
+        // If webview interface exists
+        if (window.Android) {
+            window.Android.closeApp();
+        } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.closeApp) {
+            window.webkit.messageHandlers.closeApp.postMessage('');
+        }
+    });
 });
