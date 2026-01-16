@@ -5,8 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="농지연금 예상 수령액 계산기">
-    <title>농지연금 계산기</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="내 농지의 잠재 가치, 농지연금 예상 월 지급액을 1분 만에 조회해보세요. 농지은행 공시지가 및 감정평가액 기준 시뮬레이션.">
+    <meta name="keywords" content="농지연금 계산기, 농지은행, 농지연금 수령액, 귀농귀촌, 노후준비, 농지담보대출, 농업인 혜택">
+    <meta name="author" content="Nongji Calc">
+
+    <!-- Open Graph (SNS Share) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="농지연금 계산기">
+    <meta property="og:title" content="농지연금 예상 수령액 조회 - 1분 시뮬레이션">
+    <meta property="og:description" content="내 농지로 받을 수 있는 연금은 얼마일까요? 공시지가/감정가 기준으로 즉시 확인하세요.">
+    <meta property="og:image" content="https://angibeom0985-arch.github.io/Nongji/og-image.png">
+    <meta property="og:url" content="https://angibeom0985-arch.github.io/Nongji/">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+    <title>농지연금 계산기 | 예상 수령액 조회</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,8 +49,8 @@
     <main class="app-content">
         <!-- Input Section -->
         <section class="input-section">
-            <h2 class="section-title">정보를 입력해주세요</h2>
-            <p class="section-desc">간단한 입력으로 예상 연금을 확인하세요.</p>
+            <h2 class="section-title">예상 연금 조회</h2>
+            <p class="section-desc">보유하신 농지 정보를 입력하고 수령액을 확인하세요.</p>
 
             <form id="pensionForm">
                 <div class="input-group">
@@ -97,7 +114,7 @@
     <!-- Fixed Bottom Button -->
     <div class="fixed-bottom-bar">
         <button type="button" id="calcBtn" class="btn-primary btn-large">
-            <span class="btn-text">내 연금 계산하기</span>
+            <span class="btn-text">수령액 계산하기</span>
         </button>
     </div>
 
@@ -162,7 +179,7 @@
     <div id="exitModal" class="exit-modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
-            <h3 class="modal-title">앱을 종료하시겠습니까?</h3>
+            <h3 class="modal-title">계산기를 종료하시겠습니까?</h3>
             <div class="ad-container">
                 <center>
                     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2686975437928535"
