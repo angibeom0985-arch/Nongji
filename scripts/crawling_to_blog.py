@@ -78,7 +78,7 @@ def generate_html(article, index):
 </head>
 <body>
     <div class="article-container">
-        <a href="index.html" style="text-decoration: none; color: var(--color-text-sub);">← 목록으로</a>
+        <a href="./" style="text-decoration: none; color: var(--color-text-sub);">← 목록으로</a>
         <header class="article-header">
             <h1 class="article-title">{article['title'].replace('[보도자료]', '').strip()}</h1>
             <div class="article-meta">{article['date']} · 보도자료 요약</div>
