@@ -725,23 +725,31 @@ body.dark-mode .toggle-handle {
         margin-bottom: 0;
     }
 
-    .input-group:nth-child(1) {
+    .spouse-section .input-group {
+        margin-bottom: 24px;
+    }
+    .spouse-section .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+    #pensionForm > *:nth-child(1) {
         grid-column: 1 / 2;
     }
 
-    .input-group:nth-child(2) {
+    #pensionForm > *:nth-child(2) { /* .spouse-section */
         grid-column: 2 / 3;
+        grid-row: 1;
     }
 
-    .input-group:nth-child(3) {
-        grid-column: 2 / 3;
-    }
-
-    .input-group:nth-child(4) {
+    #pensionForm > *:nth-child(3) {
         grid-column: 1 / -1;
     }
 
-    .input-group:nth-child(5) {
+    #pensionForm > *:nth-child(4) {
+        grid-column: 1 / -1;
+    }
+
+    #pensionForm > *:nth-child(5) {
         grid-column: 1 / -1;
     }
 
