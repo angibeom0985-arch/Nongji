@@ -138,17 +138,17 @@ def generate_html(article):
         file_html += '</ul></div>'
 
     ad_block = """
-        <div class="ad-container" style="margin: 20px auto 40px; text-align: center;">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-2686975437928535"
-                 data-ad-slot="6069624797"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
+<div><center>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2686975437928535"
+     data-ad-slot="6069624797"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center></div>
     """
     
     html_content = f"""<!DOCTYPE html>
