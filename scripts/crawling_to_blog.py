@@ -133,6 +133,10 @@ def generate_html(article, index):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{display_title} | 농지연금 블로그</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+
     <!-- AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2686975437928535"
      crossorigin="anonymous"></script>
