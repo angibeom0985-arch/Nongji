@@ -10,44 +10,69 @@ LIST_URL = "https://www.fbo.or.kr/info/bbs/RepdList.do?menuId=080030&schNtceClsf
 # Configuration
 BASE_URL = "https://www.fbo.or.kr"
 LIST_URL = "https://www.fbo.or.kr/info/bbs/RepdList.do?menuId=080030&schNtceClsfCd=B01010200"
-BLOG_DIR = "blog" # Since I run from root
+BLOG_DIR = "blog"
 TEMPLATE_PATH = "blog_template.html"
 
-# Top 5 Links found manually (to demonstrate immediate value)
-TARGET_LINKS = [
-    "/info/bbs/NoticeView.do?menuId=080030&schNtceClsfCd=B01010200&ntceMngid=202500000407", # Fee abolishment
-    "/info/bbs/NoticeView.do?menuId=080030&schNtceClsfCd=B01010200&ntceMngid=202500000389", # Portal integration
-    "/info/bbs/NoticeView.do?menuId=080030&schNtceClsfCd=B01010200&ntceMngid=202500000388", # Youth forum
-    "/info/bbs/NoticeView.do?menuId=080030&schNtceClsfCd=B01010200&ntceMngid=202500000384", # Alarm service
-    "/info/bbs/NoticeView.do?menuId=080030&schNtceClsfCd=B01010200&ntceMngid=202500000377"  # Budget
-]
+def get_article_links():
+    print(f"Scanning list: {LIST_URL}")
+    links = []
+    try:
+        response = requests.get(LIST_URL)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # User defined selector: <td class="subject"> <a ...>
+        items = soup.select("td.subject > a")
+        for item in items:
+            href = item.get('href')
+            # The href might be relative or absolute. Usually it's "NoticeView.do?..."
+            if href and 'NoticeView.do' in href:
+                # Handle path joining carefully. The list is at /info/bbs/
+                # Href is likely "NoticeView.do..."
+                full_link = f"/info/bbs/{href}"
+                links.append(full_link)
+                
+        print(f"Found {len(links)} articles.")
+        return links
+    except Exception as e:
+        print(f"Error scanning list: {e}")
+        return []
 
 def fetch_article(url):
     full_url = BASE_URL + url
     print(f"Fetching: {full_url}")
     try:
         response = requests.get(full_url)
-        response.encoding = 'utf-8' # Ensure correct encoding for Korean
+        response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Selectors (These are hypothetical based on common k-gov sites, adjusted if needed)
-        # Usually checking the title in a specific class
-        title = soup.select_one(".BoardViewTitle") or soup.select_one("h3.view_tit") or soup.find("h3")
-        title_text = title.get_text(strip=True) if title else "제목 없음"
+        # User defined selector: <div class="viewTit"> <h4>Title</h4> ...
+        title_node = soup.select_one("div.viewTit > h4")
+        title_text = title_node.get_text(strip=True) if title_node else "제목 없음"
         
-        # Content
-        # Common classes for content: .BoardViewContent, .view_cont, .db_data
-        content = soup.select_one(".view_cont") or soup.select_one(".BoardViewContent") or soup.find("div", {"class": "view_cont"})
+        # User defined selector: <div class="viewContent"> <pre ...>
+        content_node = soup.select_one("div.viewContent")
         
-        if not content:
-            # Fallback: look for generic content container
-            content = soup.select_one(".content") 
-
-        content_html = str(content) if content else "<p>내용을 가져올 수 없습니다.</p>"
+        if content_node:
+            # "Adaptation": Convert raw pre text to styled paragraphs
+            # The user mentioned <pre class="txt">. We extract text and split by newlines.
+            raw_text = content_node.get_text()
+            # Simple heuristic: Split by double newlines for paragraphs
+            paragraphs = raw_text.split('\n\n')
+            
+            adapted_html = ""
+            for p in paragraphs:
+                clean_p = p.strip()
+                if clean_p:
+                    adapted_html += f"<p>{clean_p}</p>\n"
+            
+            # If explicit images exist, keep them? For now, text adaptation is priority.
+        else:
+            adapted_html = "<p>내용을 가져올 수 없습니다.</p>"
         
         return {
             "title": title_text,
-            "content": content_html,
+            "content": adapted_html,
             "date": datetime.date.today().strftime("%Y.%m.%d"),
             "url": full_url
         }
@@ -142,10 +167,15 @@ def update_index(articles):
 def main():
     articles = []
     print("Starting crawler...")
-    for i, link in enumerate(TARGET_LINKS):
+    
+    # Get links dynamically
+    target_links = get_article_links()
+    
+    # Process only top 10 for safety/demo (user can remove slice later)
+    for i, link in enumerate(target_links[:10]): 
         data = fetch_article(link)
         if data:
-            generate_html(data, i+1) # IDs 1 to 5
+            generate_html(data, i+1) 
             articles.append(data)
     
     if articles:
