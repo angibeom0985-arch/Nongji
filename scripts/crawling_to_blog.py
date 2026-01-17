@@ -74,6 +74,92 @@ def sanitize_filename(title):
     clean = clean.replace(' ', '-').replace('[', '').replace(']', '')
     return clean.strip()[:50] # Limit length
 
+
+
+def adapt_content_node(content_node):
+    """
+    Parses the BeautifulSoup content node to extract structure:
+    - Intro (First paragraph)
+    - Subheadings (Bold text, or lines starting with □, ○, -, <)
+    - Body (Regular text)
+    Returns: HTML string with <div class="intro-box">, <h3>, <p>
+    """
+    if not content_node:
+        return ""
+        
+    final_html = ""
+    
+    # Strategy: Iterate through significant child elements (p, div) or split by <br>
+    # Since structure varies, we'll try to process 'blocks' of text.
+    # We will look for structural markers in text AND HTML tags (strong/b).
+    
+    # 1. Get textual blocks (mixed with relevant tags)
+    # We'll use a simplified approach: process text lines but check for 'strong' parents
+    
+    lines = []
+    # Using 'decode_contents' to get inner HTML, then split by <br> or </p> is one way.
+    # An easier way using BS4: iterate over strings and tags?
+    # Let's clean it up:
+    
+    # Convert <br> to newlines to distinct blocks
+    for br in content_node.find_all("br"):
+        br.replace_with("\n")
+        
+    # Get text blocks (splitting by newlines we just made + natural block elements)
+    text = content_node.get_text("\n")
+    raw_blocks = [line.strip() for line in text.split('\n') if line.strip()]
+    
+    if not raw_blocks:
+        return ""
+
+    # Phase 2: Classification
+    # First block -> Intro (unless it's a date or meta info? Press releases usually start with title or intro)
+    # But usually Title is separate. So first block is Intro.
+    
+    intro_done = False
+    
+    for i, block in enumerate(raw_blocks):
+        # 1. Detect Intro (First valid block)
+        if not intro_done:
+            # Highlight key info in Intro
+            block = re.sub(r'(\d{4}[-.]\d{1,2}[-.]\d{1,2}|\d{4}년\s?\d{1,2}월\s?\d{1,2}일)', r'<span class="highlight-green">\1</span>', block)
+            block = re.sub(r'(\d+(?:,\d{3})*원|\d+(?:\.\d+)?%)', r'<span class="highlight-green">\1</span>', block)
+            
+            final_html += f'<div class="intro-box"><span class="intro-label">요약</span>{block}</div>\n'
+            intro_done = True
+            continue
+
+        # 2. Detect Header vs Body
+        is_header = False
+        
+        # Heuristic 1: Special Bullets (Very common in Korean Gov docs)
+        if block.startswith(('□', '○', 'ㅇ', 'o', '-', '1.', '[', '<')):
+            is_header = True
+            # Clean bullet for display
+            clean_text = re.sub(r'^[\□\○\ㅇ\-\1\.\s]+', '', block).strip()
+        else:
+            clean_text = block
+
+        # Heuristic 2: Short length + Ends without punctuation (often a title)
+        if len(block) < 40 and not block.endswith(('.', ',')):
+             is_header = True
+
+        # Render
+        if is_header:
+            final_html += f"<h3>{clean_text}</h3>\n"
+        else:
+            # Body Formatting: Highlight logic + Sentence Break
+            body_text = block
+            body_text = re.sub(r'(\d{4}[-.]\d{1,2}[-.]\d{1,2}|\d{4}년\s?\d{1,2}월\s?\d{1,2}일)', r'<span class="highlight-green">\1</span>', body_text)
+            body_text = re.sub(r'(\d+(?:,\d{3})*원|\d+(?:\.\d+)?%)', r'<span class="highlight-green">\1</span>', body_text)
+            
+            # Sentence splitting for readability
+            body_text = body_text.replace('. ', '.<br>') 
+            
+            final_html += f"<p>{body_text}</p>\n"
+            
+    return final_html
+
 def fetch_article(url):
     full_url = BASE_URL + url
     print(f"Fetching: {full_url}")
@@ -87,10 +173,21 @@ def fetch_article(url):
         
         if title_text == "제목 없음":
             return None
+            
+        # Extract Date
+        date_text = datetime.date.today().strftime("%Y.%m.%d") # Default
+        view_tit_ul = soup.select_one("div.viewTit ul")
+        if view_tit_ul:
+            text_content = view_tit_ul.get_text()
+            match = re.search(r'(\d{4}-\d{2}-\d{2})', text_content)
+            if match:
+                date_text = match.group(1).replace('-', '.')
         
         content_node = soup.select_one("div.viewContent")
         if content_node:
-            adapted_html = adapt_text(content_node.get_text())
+            # NEW: Pass the Node itself to easier extraction logic (or just text extraction with BR handling)
+            # The new adapt_content_node handles <br> to \n conversion internally
+            adapted_html = adapt_content_node(content_node)
         else:
             adapted_html = "<p>내용을 가져올 수 없습니다.</p>"
             
@@ -98,25 +195,19 @@ def fetch_article(url):
         files = []
         file_node = soup.select_one("div.viewFile")
         if file_node:
-            # Look for links in dd.fileName or just 'a' tags inside
             links = file_node.select("dd.fileName a")
-            # If not found there, try generic a in viewFile
-            if not links:
-                links = file_node.select("a")
-            
+            if not links: links = file_node.select("a")
             for link in links:
                 file_href = link.get('href')
                 file_name = link.get_text(strip=True)
                 if file_href and "NoticeDownload" in file_href:
-                    # Construct full download link. Note: It's usually /info/bbs/NoticeDownload...
-                    # or pure absolute. Let's assume relative to /info/bbs/
                     full_file_url = f"https://www.fbo.or.kr/info/bbs/{file_href}"
                     files.append({"name": file_name, "url": full_file_url})
 
         return {
             "title": title_text,
             "content": adapted_html,
-            "date": datetime.date.today().strftime("%Y.%m.%d"),
+            "date": date_text,
             "url": full_url,
             "files": files
         }
