@@ -34,31 +34,59 @@ def get_article_links():
 
 def adapt_text(raw_text):
     """
-    Simple rule-based adaptation to improve readability.
+    Advanced heuristic adaptation to structure text into Blog format:
+    [Intro Box] -> [Subheadings/Body]
     """
+    # 1. Basic Cleanup
     text = raw_text.replace('\r', '').strip()
     
-    # Highlight key info (Regex)
+    # 2. Highlight key info (Regex) - Apply BEFORE structure splitting to ensure it persists
     # Dates
-    text = re.sub(r'(\d{4}[-.]\d{1,2}[-.]\d{1,2}|\d{4}년\s?\d{1,2}월)', r'<strong>\1</strong>', text)
+    text = re.sub(r'(\d{4}[-.]\d{1,2}[-.]\d{1,2}|\d{4}년\s?\d{1,2}월\s?\d{1,2}일|\d{4}년\s?\d{1,2}월)', r'<strong>\1</strong>', text)
     # Money/Percentages
     text = re.sub(r'(\d+(?:,\d{3})*원|\d+(?:\.\d+)?%)', r'<strong>\1</strong>', text)
     
-    paragraphs = text.split('\n\n')
+    # 3. Split into blocks
+    blocks = text.split('\n\n')
+    blocks = [b.strip() for b in blocks if b.strip()]
+    
     adapted_html = ""
     
-    # Editor Note
-    adapted_html += '<div class="editor-note">💡 농어촌공사의 최근 소식을 알기 쉽게 정리해 드립니다.</div>'
-    
-    for p in paragraphs:
-        clean_p = p.strip()
-        if not clean_p: continue
+    # --- Logic: Intro Section ---
+    # Assume the first block is the "Lead" (Summary)
+    if blocks:
+        intro_text = blocks[0]
+        # Apply sentence splitting for Intro too
+        intro_text = intro_text.replace('. ', '.<br>')
+        adapted_html += f'<div class="intro-box"><span class="intro-label">요약</span>{intro_text}</div>\n'
         
-        if len(clean_p) > 150:
-            clean_p = clean_p.replace('. ', '.<br><br>')
+        # Remove first block from processing
+        blocks = blocks[1:]
+
+    # --- Logic: Body Sections ---
+    for block in blocks:
+        # Heuristic: Is this a Title/Subheading?
+        # Check patterns: starts with special char or short length (<40 chars)
+        is_header = False
+        strip_block = re.sub(r'<[^>]+>', '', block).strip() # clean tags for check
+        
+        if len(strip_block) < 40 and not strip_block.endswith('.'):
+            is_header = True
+        elif strip_block.startswith(('□', 'ㅇ', '-', '1.', '[', '(', '<')):
+             is_header = True
+
+        if is_header:
+            # Clean header chars
+            clean_header = re.sub(r'^[\□\ㅇ\-\1\.\s]+', '', strip_block)
+            adapted_html += f"<h3>{clean_header}</h3>\n"
+        else:
+            # Regular Body Text
+            # Apply strict sentence breaking
+            # Replace ". " with ".<br><br>" for distinct separation or ".<br>" for soft break
+            # User asked for "Sentence end -> line break".
+            body_text = block.replace('. ', '.<br><br>')
+            adapted_html += f"<p>{body_text}</p>\n"
             
-        adapted_html += f"<p>{clean_p}</p>\n"
-        
     return adapted_html
 
 def fetch_article(url):
@@ -115,9 +143,19 @@ def generate_html(article, index):
         .article-header {{ border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 30px; }}
         .article-title {{ font-size: 1.6rem; font-weight: 700; line-height: 1.4; }}
         .article-meta {{ color: var(--color-text-sub); margin-top: 10px; font-size: 0.9rem; }}
-        .article-body {{ font-size: 1.05rem; line-height: 1.8; color: var(--color-text-main); }}
-        .article-body strong {{ color: var(--color-primary); font-weight: 600; }}
-        .editor-note {{ background: var(--color-surface); padding: 15px; border-radius: 8px; font-size: 0.95rem; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }}
+        
+        /* Body Typography */
+        .article-body {{ font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }}
+        .article-body strong {{ background: linear-gradient(120deg, var(--color-primary-light) 0%, var(--color-primary-light) 100%); padding: 0 4px; border-radius: 4px; color: inherit; font-weight: 700; }}
+        
+        /* Intro Box */
+        .intro-box {{ background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--color-primary); position: relative; }}
+        .intro-label {{ background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; position: absolute; top: -12px; left: 20px; }}
+        
+        /* Headers */
+        .article-body h3 {{ font-size: 1.3rem; margin: 40px 0 16px; border-left: 4px solid var(--color-primary); padding-left: 12px; color: var(--color-text-main); font-weight: 700; }}
+        .article-body p {{ margin-bottom: 24px; }}
+        
         .original-link {{ display: block; margin-top: 40px; padding: 15px; background: var(--color-surface); border-radius: 8px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; }}
         .original-link:hover {{ background: var(--color-bg); }}
     </style>

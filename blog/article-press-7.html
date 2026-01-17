@@ -15,9 +15,19 @@
         .article-header { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 30px; }
         .article-title { font-size: 1.6rem; font-weight: 700; line-height: 1.4; }
         .article-meta { color: var(--color-text-sub); margin-top: 10px; font-size: 0.9rem; }
-        .article-body { font-size: 1.05rem; line-height: 1.8; color: var(--color-text-main); }
-        .article-body strong { color: var(--color-primary); font-weight: 600; }
-        .editor-note { background: var(--color-surface); padding: 15px; border-radius: 8px; font-size: 0.95rem; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }
+        
+        /* Body Typography */
+        .article-body { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }
+        .article-body strong { background: linear-gradient(120deg, var(--color-primary-light) 0%, var(--color-primary-light) 100%); padding: 0 4px; border-radius: 4px; color: inherit; font-weight: 700; }
+        
+        /* Intro Box */
+        .intro-box { background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--color-primary); position: relative; }
+        .intro-label { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; position: absolute; top: -12px; left: 20px; }
+        
+        /* Headers */
+        .article-body h3 { font-size: 1.3rem; margin: 40px 0 16px; border-left: 4px solid var(--color-primary); padding-left: 12px; color: var(--color-text-main); font-weight: 700; }
+        .article-body p { margin-bottom: 24px; }
+        
         .original-link { display: block; margin-top: 40px; padding: 15px; background: var(--color-surface); border-radius: 8px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; }
         .original-link:hover { background: var(--color-bg); }
     </style>
@@ -30,11 +40,11 @@
             <div class="article-meta">2026.01.18 · 보도자료 요약</div>
         </header>
         <div class="article-body">
-            <div class="editor-note">💡 농어촌공사의 최근 소식을 알기 쉽게 정리해 드립니다.</div><p>한국농어촌공사(사장 김인중)는 30일 경기 수원시에 있는 공사 경기지역본부에서 ‘제2회 청년 농업인 농지은행사업 참여 수기 공모전 시상식’을 개최한다고 밝혔다.</p>
+            <div class="intro-box"><span class="intro-label">요약</span>한국농어촌공사(사장 김인중)는 30일 경기 수원시에 있는 공사 경기지역본부에서 ‘제2회 청년 농업인 농지은행사업 참여 수기 공모전 시상식’을 개최한다고 밝혔다.</div>
 <p>공사는 농지은행을 통해 영농에 성공적으로 정착한 청년 농업인의 사례를 발굴·공유하고자 지난해부터 ‘농지은행사업 참여 수기 공모전’을 시행하고 있다.</p>
-<p>이번 수기 공모는 지난 2월 20일부터 3월 25일까지 한 달간 진행됐으며, 총 62건의 수기가 접수됐다. 심사위원단은 주제 적합성과 표현력 등을 종합적으로 심사해 최우수상 1점, 우수상 2점, 장려상 5점을 선정했다.</p>
-<p>최우수상은 제주에서 ‘공공임대용 농지매입사업’을 지원받은 고해든 청년 농업인이 수상했다. 고해든 씨는 높은 임차료와 경영비 부담 속에도, 농지은행을 통해 농지를 확보하고 친환경 농업을 지속해 온 이야기를 수기에 진정성 있게 담아냈다.</p>
-<p>우수상은 조민제, 홍석종 청년 농업인이 각각 수상했다. 조민제 씨는 스마트팜 교육을 마쳤지만, 자본이 부족해 영농을 시작하지 못했으나, 공공임대용 농지를 통해 스마트팜 영농 창업의 기회를 마련한 이야기를 진솔하게 풀어냈다.</p>
+<p>이번 수기 공모는 지난 2월 20일부터 3월 25일까지 한 달간 진행됐으며, 총 62건의 수기가 접수됐다.<br><br>심사위원단은 주제 적합성과 표현력 등을 종합적으로 심사해 최우수상 1점, 우수상 2점, 장려상 5점을 선정했다.</p>
+<p>최우수상은 제주에서 ‘공공임대용 농지매입사업’을 지원받은 고해든 청년 농업인이 수상했다.<br><br>고해든 씨는 높은 임차료와 경영비 부담 속에도, 농지은행을 통해 농지를 확보하고 친환경 농업을 지속해 온 이야기를 수기에 진정성 있게 담아냈다.</p>
+<p>우수상은 조민제, 홍석종 청년 농업인이 각각 수상했다.<br><br>조민제 씨는 스마트팜 교육을 마쳤지만, 자본이 부족해 영농을 시작하지 못했으나, 공공임대용 농지를 통해 스마트팜 영농 창업의 기회를 마련한 이야기를 진솔하게 풀어냈다.</p>
 <p>축산업에 종사하는 홍석종 씨는 ‘공공임대용 농지매입사업’을 통해 안정적인 조사료 수급을 위한 농지를 확보하고, 이를 기반으로 경영규모를 늘려나갈 수 있었다는 긍정적인 변화를 잘 담아냈다.</p>
 <p>이 외에도 장려상을 받은 김혜수, 한태웅, 김화목, 박은영, 엄기현 청년 농업인도 농지은행의 지원을 발판 삼아 현실적 어려움을 극복하고, 농업에 안정적으로 정착해 성장을 이어가고 있는 경험을 수기로 전했다.</p>
 <p>정인노 한국농어촌공사 부사장은 “이번 공모전을 통해 보여준 청년 농업인들의 모습은 다른 청년들에게도 큰 귀감이 되는 소중한 사례”라며, “공사는 우수 사례를 널리 알리는 한편, 청년 농업인의 안정적인 영농을 지속해서 지원해 나가겠다.”라고 덧붙였다.</p>

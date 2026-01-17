@@ -15,9 +15,19 @@
         .article-header { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 30px; }
         .article-title { font-size: 1.6rem; font-weight: 700; line-height: 1.4; }
         .article-meta { color: var(--color-text-sub); margin-top: 10px; font-size: 0.9rem; }
-        .article-body { font-size: 1.05rem; line-height: 1.8; color: var(--color-text-main); }
-        .article-body strong { color: var(--color-primary); font-weight: 600; }
-        .editor-note { background: var(--color-surface); padding: 15px; border-radius: 8px; font-size: 0.95rem; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }
+        
+        /* Body Typography */
+        .article-body { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }
+        .article-body strong { background: linear-gradient(120deg, var(--color-primary-light) 0%, var(--color-primary-light) 100%); padding: 0 4px; border-radius: 4px; color: inherit; font-weight: 700; }
+        
+        /* Intro Box */
+        .intro-box { background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--color-primary); position: relative; }
+        .intro-label { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; position: absolute; top: -12px; left: 20px; }
+        
+        /* Headers */
+        .article-body h3 { font-size: 1.3rem; margin: 40px 0 16px; border-left: 4px solid var(--color-primary); padding-left: 12px; color: var(--color-text-main); font-weight: 700; }
+        .article-body p { margin-bottom: 24px; }
+        
         .original-link { display: block; margin-top: 40px; padding: 15px; background: var(--color-surface); border-radius: 8px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; }
         .original-link:hover { background: var(--color-bg); }
     </style>
@@ -30,7 +40,7 @@
             <div class="article-meta">2026.01.18 · 보도자료 요약</div>
         </header>
         <div class="article-body">
-            <div class="editor-note">💡 농어촌공사의 최근 소식을 알기 쉽게 정리해 드립니다.</div><p>한국농어촌공사(사장 김인중)가 시행 중인 농지은행사업의 2026년 정부 예산안이 확정됐다. 총 2조 4천억 원으로 역대 최대 규모다. 청년 농업 인재 육성을 위한 3개 사업이 중점적으로 확대됐다.</p>
+            <div class="intro-box"><span class="intro-label">요약</span>한국농어촌공사(사장 김인중)가 시행 중인 농지은행사업의 2026년 정부 예산안이 확정됐다.<br>총 2조 4천억 원으로 역대 최대 규모다.<br>청년 농업 인재 육성을 위한 3개 사업이 중점적으로 확대됐다.</div>
 <p>공사가 상속·이농 등 비농업인과 고령·은퇴농이 보유한 우량 농지를 매입해 청년 농업인에게 낮은 임대료로 지원하는 ‘공공임대용 농지매입사업’에 1조 6,170억 원을 투입한다.<br><br>이는 2025년 대비 약 <strong>68%</strong> 증가한 수준으로, 청년 농업인이 농촌에 정착하는 데 큰 어려움 중 하나인 농지 확보를 안정적으로 지원하게 된다.</p>
 <p>청년 농업인이 원하는 농지를 공사가 매입한 뒤 매도를 전제로 최장 30년간 장기 임대·매도하는 ‘선임대후매도사업’에 770억 원이 반영됐다.<br><br>올해 대비 578억 원 증액돼 약 <strong>300%</strong> 증가했으며, 청년 농업인의 농지 구입 부담 완화에 기여할 전망이다.
  

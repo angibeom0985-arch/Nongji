@@ -15,9 +15,19 @@
         .article-header { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 30px; }
         .article-title { font-size: 1.6rem; font-weight: 700; line-height: 1.4; }
         .article-meta { color: var(--color-text-sub); margin-top: 10px; font-size: 0.9rem; }
-        .article-body { font-size: 1.05rem; line-height: 1.8; color: var(--color-text-main); }
-        .article-body strong { color: var(--color-primary); font-weight: 600; }
-        .editor-note { background: var(--color-surface); padding: 15px; border-radius: 8px; font-size: 0.95rem; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }
+        
+        /* Body Typography */
+        .article-body { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }
+        .article-body strong { background: linear-gradient(120deg, var(--color-primary-light) 0%, var(--color-primary-light) 100%); padding: 0 4px; border-radius: 4px; color: inherit; font-weight: 700; }
+        
+        /* Intro Box */
+        .intro-box { background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--color-primary); position: relative; }
+        .intro-label { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; position: absolute; top: -12px; left: 20px; }
+        
+        /* Headers */
+        .article-body h3 { font-size: 1.3rem; margin: 40px 0 16px; border-left: 4px solid var(--color-primary); padding-left: 12px; color: var(--color-text-main); font-weight: 700; }
+        .article-body p { margin-bottom: 24px; }
+        
         .original-link { display: block; margin-top: 40px; padding: 15px; background: var(--color-surface); border-radius: 8px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; }
         .original-link:hover { background: var(--color-bg); }
     </style>
@@ -30,7 +40,7 @@
             <div class="article-meta">2026.01.18 · 보도자료 요약</div>
         </header>
         <div class="article-body">
-            <div class="editor-note">💡 농어촌공사의 최근 소식을 알기 쉽게 정리해 드립니다.</div><p>한국농어촌공사(사장 김인중, 이하 ‘공사’)는 11월 7일, 서울 중구 농협은행 본사에서 NH농협은행(은행장 강태영, 이하‘농협은행’)과 ‘농지 서비스 상호 협력을 위한 업무협약’을 체결했다고 밝혔다.</p>
+            <div class="intro-box"><span class="intro-label">요약</span>한국농어촌공사(사장 김인중, 이하 ‘공사’)는 11월 7일, 서울 중구 농협은행 본사에서 NH농협은행(은행장 강태영, 이하‘농협은행’)과 ‘농지 서비스 상호 협력을 위한 업무협약’을 체결했다고 밝혔다.</div>
 <p>‘농지은행 통합포털(www.fbo.or.kr)’은 농지가 필요하지 않은 사람과 필요한 사람을 연결하는 플랫폼으로, 매매·임대 매물 정보와 가격, 임차료 등 다양한 정보를 제공하고 있다.<br><br>플랫폼 운영에서 한 걸음 더 나아가, 공사는 더욱 많은 사람이 농지를 쉽게 확인하고 농업에 정착할 수 있도록 농지 매물 정보를 공공·민간 부문으로 개방하고 있다.</p>
 <p>이번 업무협약의 골자는 공사 ‘농지은행 통합포털’과 농협은행 ‘내일의 땅*’에 게재되는 농지 매물 정보를 상호 연계하는 것이다.<br><br>양 기관은 각각의 플랫폼에서 보유 농지 정보를 통합 제공해 농지 정보 접근성을 높이고 이용자 편의를 강화할 계획이다.
  * 내일의 땅: 농협은행이 NH올원뱅크에서 제공하는 토지, 농지 정보 제공 서비스</p>
