@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="내 농지의 잠재 가치, 농지연금 예상 월 지급액을 1분 만에 조회해보세요. 농지은행 공시지가 및 감정평가액 기준 시뮬레이션.">
+    <meta name="keywords" content="농지연금 계산기, 농지은행, 농지연금 수령액, 귀농귀촌, 노후준비, 농지담보대출, 농업인 혜택">
+    <meta name="author" content="Nongji Calc">
+
+    <!-- Open Graph (SNS Share) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="농지연금 계산기">
+    <meta property="og:title" content="농지연금 예상 수령액 조회 - 1분 시뮬레이션">
+    <meta property="og:description" content="내 농지로 받을 수 있는 연금은 얼마일까요? 공시지가/감정가 기준으로 즉시 확인하세요.">
+    <meta property="og:image" content="https://angibeom0985-arch.github.io/Nongji/og-image.png">
+    <meta property="og:url" content="https://angibeom0985-arch.github.io/Nongji/">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+    <title>농지연금 계산기 | 예상 수령액 조회</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <!-- App Bar -->
+    <header class="app-bar">
+        <h1 class="app-title">농지연금 계산기</h1>
+        <button id="themeToggle" class="theme-btn" aria-label="테마 변경">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+        </button>
+    </header>
+
+    <main class="app-content">
+        <!-- Input Section -->
+        <section class="input-section">
+            <h2 class="section-title">예상 연금 조회</h2>
+            <p class="section-desc">보유하신 농지 정보를 입력하고 수령액을 확인하세요.</p>
+
+            <form id="pensionForm">
+                <div class="input-group">
+                    <label for="ownerDob">생년월일 (본인)</label>
+                    <input type="date" id="ownerDob" required>
+                    <p class="input-hint" id="ageHint">만 60세 이상</p>
+                </div>
+
+                <div class="input-group">
+                    <label>배우자 승계</label>
+                    <div class="toggle-switch-container">
+                        <input type="checkbox" id="spouseToggle" class="toggle-input">
+                        <label for="spouseToggle" class="toggle-label">
+                            <span class="toggle-text on">승계</span>
+                            <span class="toggle-text off">비승계</span>
+                            <span class="toggle-handle"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group hidden" id="spouseDobGroup">
+                    <label for="spouseDob">생년월일 (배우자)</label>
+                    <input type="date" id="spouseDob">
+                </div>
+
+                <div class="input-group">
+                    <label>농지 평가 방식</label>
+                    <div class="radio-group-modern">
+                        <label class="radio-card active">
+                            <input type="radio" name="evalMethod" value="public" checked>
+                            <span class="radio-content">
+                                <span class="radio-title">공시지가</span>
+                                <span class="radio-desc">100% 반영</span>
+                            </span>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="evalMethod" value="appraised">
+                            <span class="radio-content">
+                                <span class="radio-title">감정가</span>
+                                <span class="radio-desc">90% 반영</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="landValue">농지 가격</label>
+                    <div class="currency-input-wrapper">
+                        <input type="tel" id="landValue" placeholder="0" required inputmode="numeric">
+                        <span class="currency-unit">원</span>
+                    </div>
+                    <p class="input-hint">적용 평가액: <span id="actualEvalAmount" class="highlight-text">0</span>원</p>
+                </div>
+
+                <!-- Spacer for fixed bottom button -->
+                <div class="bottom-spacer"></div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Fixed Bottom Button -->
+    <div class="fixed-bottom-bar">
+        <button type="button" id="calcBtn" class="btn-primary btn-large">
+            <span class="btn-text">수령액 계산하기</span>
+        </button>
+    </div>
+
+    <!-- Results Bottom Sheet -->
+    <div id="resultSheet" class="bottom-sheet">
+        <div class="sheet-overlay" id="sheetOverlay"></div>
+        <div class="sheet-content">
+            <div class="sheet-handle-bar">
+                <div class="sheet-handle"></div>
+            </div>
+
+            <div class="sheet-header">
+                <h3>예상 월 수령액</h3>
+                <span class="close-btn" id="closeSheetBtn">&times;</span>
+            </div>
+
+            <div class="sheet-body">
+                <div class="summary-chips">
+                    <div class="chip">만 <span id="resAge">0</span>세</div>
+                    <div class="chip">평가액 <span id="resEvalAmount">0</span>원</div>
+                </div>
+
+                <div class="result-list">
+                    <div class="result-item highlight">
+                        <div class="item-header">
+                            <span class="item-title">종신형 <small>(정액형)</small></span>
+                            <span class="badge-best">추천</span>
+                        </div>
+                        <div class="item-amount">
+                            월 <strong id="valLifetime">0</strong> 원
+                        </div>
+                    </div>
+
+                    <div class="result-grid">
+                        <div class="result-item-small">
+                            <span class="label">5년형</span>
+                            <span class="val"><strong id="valTerm5">0</strong>원</span>
+                        </div>
+                        <div class="result-item-small">
+                            <span class="label">10년형</span>
+                            <span class="val"><strong id="valTerm10">0</strong>원</span>
+                        </div>
+                        <div class="result-item-small">
+                            <span class="label">15년형</span>
+                            <span class="val"><strong id="valTerm15">0</strong>원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disclaimer-box">
+                    <p>※ 본 결과는 2026년 기준 예상 시뮬레이션이며, 실제 연금액과 차이가 있을 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="sheet-footer">
+                <a href="https://www.fbo.or.kr/" target="_blank" class="btn-secondary full-width">농지은행 바로가기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Confirmation Modal -->
+    <div id="exitModal" class="exit-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <h3 class="modal-title">계산기를 종료하시겠습니까?</h3>
+            <div class="ad-container">
+                <center>
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2686975437928535"
+                        data-ad-slot="6069624797" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </center>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="stayBtn" class="btn-cancel">계속 쓰기</button>
+                <button type="button" id="exitBtn" class="btn-confirm">종료하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

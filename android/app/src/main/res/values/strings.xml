@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">농지연금 계산기</string>
+    <string name="title_activity_main">농지연금 계산기</string>
+    <string name="package_name">com.nongji.calc</string>
+    <string name="custom_url_scheme">com.nongji.calc</string>
+</resources>
