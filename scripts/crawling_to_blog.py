@@ -277,7 +277,7 @@ def generate_html(article):
         /* Intro Box & Ads */
         .intro-box {{ background: var(--color-surface); padding: 24px; border-radius: 16px; margin-bottom: 50px; border: 1px solid var(--color-primary); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }}
         .intro-label {{ background: var(--color-primary); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; position: absolute; top: -14px; left: 24px; }}
-        .ad-wrapper {{ margin: 40px 0; padding: 20px 0; background: var(--color-bg); border-radius: 8px; }}
+        .ad-wrapper {{ margin: 15px 0; padding: 10px 0; background: var(--color-bg); border-radius: 8px; }}
 
         /* Headers & Spacing */
         .article-body h3 {{ font-size: 1.5rem; margin: 60px 0 24px; border-left: 5px solid var(--color-primary); padding-left: 18px; color: var(--color-text-main); font-weight: 800; line-height: 1.3; }}
