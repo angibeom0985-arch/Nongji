@@ -14,40 +14,52 @@
     <link rel="stylesheet" href="../style.css">
     <style>
         .article-container { max-width: 680px; margin: 0 auto; padding: 40px 24px; }
-        .article-header { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 20px; }
-        .article-title { font-size: 1.6rem; font-weight: 700; line-height: 1.4; }
-        .article-meta { color: var(--color-text-sub); margin-top: 10px; font-size: 0.9rem; }
         
-        .article-body { font-size: 1.1rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }
+        /* Header Styling */
+        .article-header { border-bottom: 1px solid var(--color-border); padding-bottom: 30px; margin-bottom: 30px; }
+        .article-title { font-size: 2rem; font-weight: 800; line-height: 1.4; margin-top: 10px; word-break: keep-all; letter-spacing: -0.02em; color: var(--color-text-main); }
+        .article-meta { color: var(--color-text-sub); margin-top: 16px; font-size: 0.95rem; }
+        
+        /* Navigation Button */
+        .btn-list { display: inline-flex; align-items: center; padding: 10px 16px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-sub); text-decoration: none; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; }
+        .btn-list:hover { background-color: var(--color-bg); color: var(--color-text-main); border-color: var(--color-text-sub); }
+        
+        /* Body Typography */
+        .article-body { font-size: 1.15rem; line-height: 1.8; color: var(--color-text-main); word-break: keep-all; }
         .highlight-green { color: var(--color-primary); font-weight: 700; background-color: rgba(0, 135, 68, 0.08); padding: 0 4px; border-radius: 4px; }
         
-        .intro-box { background: var(--color-surface); padding: 20px; border-radius: 12px; margin-bottom: 40px; border: 1px solid var(--color-primary); position: relative; }
-        .intro-label { background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; position: absolute; top: -12px; left: 20px; }
+        /* Intro Box & Ads */
+        .intro-box { background: var(--color-surface); padding: 24px; border-radius: 16px; margin-bottom: 50px; border: 1px solid var(--color-primary); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .intro-label { background: var(--color-primary); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; position: absolute; top: -14px; left: 24px; }
+        .ad-wrapper { margin: 40px 0; padding: 20px 0; background: var(--color-bg); border-radius: 8px; }
+
+        /* Headers & Spacing */
+        .article-body h3 { font-size: 1.5rem; margin: 60px 0 24px; border-left: 5px solid var(--color-primary); padding-left: 18px; color: var(--color-text-main); font-weight: 800; line-height: 1.3; }
+        .article-body p { margin-bottom: 28px; }
         
-        .article-body h3 { font-size: 1.4rem; margin: 50px 0 20px; border-left: 5px solid var(--color-primary); padding-left: 15px; color: var(--color-text-main); font-weight: 800; line-height: 1.3; }
-        .article-body p { margin-bottom: 24px; }
-        
-        .file-download-box { background: var(--color-surface-lighter); padding: 20px; border-radius: 8px; margin-top: 30px; border: 1px solid var(--color-border); }
-        .file-download-box h4 { font-size: 1rem; margin-bottom: 10px; color: var(--color-text-sub); }
+        .file-download-box { background: var(--color-surface-lighter); padding: 24px; border-radius: 12px; margin-top: 40px; border: 1px solid var(--color-border); }
+        .file-download-box h4 { font-size: 1.1rem; margin-bottom: 16px; color: var(--color-text-sub); font-weight: 700; }
         .file-download-box ul { list-style: none; padding: 0; }
-        .file-download-box li { margin-bottom: 8px; }
-        .file-download-box a { color: var(--color-primary); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .file-download-box li { margin-bottom: 12px; }
+        .file-download-box a { color: var(--color-primary); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; padding: 8px 0; }
         .file-download-box a:hover { text-decoration: underline; }
         
-        .original-link { display: block; margin-top: 40px; padding: 15px; background: var(--color-surface); border-radius: 8px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; }
+        .original-link { display: block; margin-top: 60px; padding: 18px; background: var(--color-surface); border-radius: 12px; color: var(--color-text-main); text-decoration: none; font-weight: 600; text-align: center; border: 1px solid var(--color-border); transition: background 0.2s; font-size: 1.1rem; }
         .original-link:hover { background: var(--color-bg); }
     </style>
 </head>
 <body>
     <div class="article-container">
-        <a href="./" style="text-decoration: none; color: var(--color-text-sub);">← 목록으로</a>
+        <a href="./" class="btn-list">← 목록으로</a>
         <header class="article-header">
+
             <h1 class="article-title">청년농업인 목소리를 담아 농지 지원을 강화합니다.</h1>
             <div class="article-meta">2025.03.31 · 보도자료 요약</div>
         </header>
         
         
-<div><center>
+<div class="ad-wrapper">
+<center>
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-2686975437928535"
@@ -75,7 +87,8 @@
         <div class="file-download-box"><h4>첨부파일</h4><ul><li><a href="https://www.fbo.or.kr/info/bbs/NoticeDownload.do?ntceMngid=202500000349&msn=1" target="_blank">📄 [보도] 한농공, 청년농 중심 농지지원체계 강화.pdf</a></li></ul></div>
         
         
-<div><center>
+<div class="ad-wrapper">
+<center>
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-2686975437928535"
