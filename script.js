@@ -72,10 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // === Toggle Spouse Input ===
     spouseToggle.addEventListener('change', (e) => {
         if (e.target.checked) {
-            spouseDobGroup.classList.remove('hidden');
             document.getElementById('spouseDob').required = true;
         } else {
-            spouseDobGroup.classList.add('hidden');
             document.getElementById('spouseDob').required = false;
         }
     });
