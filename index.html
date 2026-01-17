@@ -78,12 +78,20 @@
 
                     <div class="input-group">
                         <label>배우자 승계</label>
-                        <div class="toggle-switch-container">
-                            <input type="checkbox" id="spouseToggle" class="toggle-input">
-                            <label for="spouseToggle" class="toggle-label">
-                                <span class="toggle-text on">승계</span>
-                                <span class="toggle-text off">비승계</span>
-                                <span class="toggle-handle"></span>
+                        <div class="radio-group-modern">
+                            <label class="radio-card active">
+                                <input type="radio" name="spouseSuccession" value="no" checked>
+                                <span class="radio-content">
+                                    <span class="radio-title">비승계</span>
+                                    <span class="radio-desc">일반형</span>
+                                </span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="spouseSuccession" value="yes">
+                                <span class="radio-content">
+                                    <span class="radio-title">승계</span>
+                                    <span class="radio-desc">배우자 보장</span>
+                                </span>
                             </label>
                         </div>
                     </div>
