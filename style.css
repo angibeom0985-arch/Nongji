@@ -831,3 +831,11 @@ body.dark-mode .toggle-handle {
         border-radius: 0;
     }
 }
+/* Blog Banner Link */
+.banner-link { display: flex; align-items: center; background: var(--color-surface); border: 1px solid var(--color-primary); border-radius: 16px; padding: 16px; margin-bottom: 24px; text-decoration: none; color: var(--color-text-main); box-shadow: 0 4px 12px rgba(0, 230, 118, 0.1); transition: transform 0.2s; }
+.banner-link:active { transform: scale(0.98); }
+.banner-icon { font-size: 1.5rem; margin-right: 12px; }
+.banner-text { flex: 1; display: flex; flex-direction: column; }
+.banner-title { font-size: 0.95rem; font-weight: 700; color: var(--color-primary); margin-bottom: 2px; }
+.banner-desc { font-size: 0.85rem; color: var(--color-text-sub); }
+.banner-arrow { color: var(--color-text-sub); font-weight: 600; }
