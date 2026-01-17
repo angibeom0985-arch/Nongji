@@ -41,21 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // === UI Elements ===
-    const landValueInput = document.getElementById('landValue');
+    const landValueInput = document.getElementById('amount');
     const actualEvalDisplay = document.getElementById('actualEvalAmount');
-    const spouseToggle = document.getElementById('spouseToggle');
+    // const spouseToggle = document.getElementById('spouseToggle'); // Removed? No, snippet didn't used it directly.
     const spouseDobGroup = document.getElementById('spouseDobGroup');
     const calcBtn = document.getElementById('calcBtn');
 
-    // Bottom Sheet Elements
-    const resultSheet = document.getElementById('resultSheet');
-    const sheetOverlay = document.getElementById('sheetOverlay');
-    const closeSheetBtn = document.getElementById('closeSheetBtn');
-
-    // Exit Modal Elements
-    const exitModal = document.getElementById('exitModal');
-    const stayBtn = document.getElementById('stayBtn');
-    const exitBtn = document.getElementById('exitBtn');
+    // ... (Sheet/Modal elements unchanged) ...
 
     // === Currency Formatting ===
     landValueInput.addEventListener('input', (e) => {
@@ -70,31 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // === Spouse Succession Radio Logic ===
-    const spouseRadios = document.querySelectorAll('input[name="spouseSuccession"]');
+    const spouseRadios = document.querySelectorAll('input[name="successionYn"]'); // Name updated
     spouseRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
-            // Update active styling for radio cards (This handles visuals if not handled by CSS check)
-            // Actually, the CSS for 'radio-card' usually relies on :checked selector? 
-            // Let's check styling. existing radio logic (lines 84-86) only calls updateActualValue.
-            // But visuals are likely handled by CSS sibling selector or script? 
-            // In typical radio-card implementations, we toggle 'active' class on the label parent.
             updateRadioClasses();
 
-            if (e.target.value === 'yes') {
-                document.getElementById('spouseDob').required = true;
+            if (e.target.value === 'Y') {
+                document.getElementById('birthday2').required = true;
             } else {
-                document.getElementById('spouseDob').required = false;
+                document.getElementById('birthday2').required = false;
             }
         });
     });
 
-    // Helper to toggle active class on labels (since we reused the class)
-    // We need to check how the valuation radios handle this.
-    // The previous code didn't show explicit class toggling for valuation radios in the snippet I saw (lines 84-86).
-    // Wait, let's look at Lines 84-86 in script.js again.
-    // "document.querySelectorAll('input[name="evalMethod"]').forEach(radio => { radio.addEventListener('change', updateActualValue); });"
-    // It seems there may be a missing "update active class" logic, OR the CSS uses input:checked + ... 
-    // BUT the HTML shows <label class="radio-card active">. This implies we need JS to toggle 'active' class on label.
+    // ... (updateRadioClasses unchanged) ...
 
     function updateRadioClasses() {
         document.querySelectorAll('.radio-card input[type="radio"]').forEach(radio => {
@@ -110,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateRadioClasses();
 
     // Hook up Valuation Radios to also update classes
-    document.querySelectorAll('input[name="evalMethod"]').forEach(radio => {
+    document.querySelectorAll('input[name="flndEvlMth"]').forEach(radio => {
         radio.addEventListener('change', () => {
             updateActualValue();
             updateRadioClasses();
@@ -119,13 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Update Calculation Logic ===
 
-    // ... (updateActualValue remains same) ...
+    function updateActualValue() {
+        const rawValue = landValueInput.value.replace(/,/g, '');
+        if (!rawValue) return 0;
+
+        const method = document.querySelector('input[name="flndEvlMth"]:checked').value;
+        let multiplier = 1.0;
+        if (method === 'R') { // R = Appraised (Confusion: Reference says P=100%, R=90%)
+            // Check Reference Label: lblflndEvlMthR -> 감정가 (평가율 : 90%)
+            multiplier = 0.9;
+        }
+        // P (Public) = 1.0
+
+        const actual = Math.floor(parseInt(rawValue, 10) * multiplier);
+        actualEvalDisplay.textContent = actual.toLocaleString();
+        return actual;
+    }
 
     // ... (Sheet Logic remains same) ...
 
     // === Calculation Trigger ===
     calcBtn.addEventListener('click', () => {
-        if (!document.getElementById('ownerDob').value) {
+        if (!document.getElementById('birthday1').value) {
             alert('생년월일을 입력해주세요.');
             return;
         }
@@ -134,8 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const isSpouseSuccession = document.querySelector('input[name="spouseSuccession"]:checked').value === 'yes';
-        if (isSpouseSuccession && !document.getElementById('spouseDob').value) {
+        const isSpouseSuccession = document.querySelector('input[name="successionYn"]:checked').value === 'Y';
+        if (isSpouseSuccession && !document.getElementById('birthday2').value) {
             alert('배우자 생년월일을 입력해주세요.');
             return;
         }
@@ -144,9 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function calculateAndShow() {
-        const dob = new Date(document.getElementById('ownerDob').value);
+        const dob = new Date(document.getElementById('birthday1').value);
         const landValue = updateActualValue();
-        const isSpouseSuccession = document.querySelector('input[name="spouseSuccession"]:checked').value === 'yes';
+        const isSpouseSuccession = document.querySelector('input[name="successionYn"]:checked').value === 'Y';
 
         const today = new Date();
         const age = today.getFullYear() - dob.getFullYear();

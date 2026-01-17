@@ -65,29 +65,29 @@
 
             <form id="pensionForm">
                 <div class="input-group">
-                    <label for="ownerDob">생년월일 (본인)</label>
-                    <input type="date" id="ownerDob" required>
+                    <label for="birthday1">생년월일 (본인)</label>
+                    <input type="date" id="birthday1" name="birthday1" required>
                     <p class="input-hint" id="ageHint">만 60세 이상</p>
                 </div>
 
                 <div class="spouse-section">
                     <div class="input-group" id="spouseDobGroup">
-                        <label for="spouseDob">생년월일 (배우자)</label>
-                        <input type="date" id="spouseDob">
+                        <label for="birthday2">생년월일 (배우자)</label>
+                        <input type="date" id="birthday2" name="birthday2">
                     </div>
 
                     <div class="input-group">
                         <label>배우자 승계</label>
                         <div class="radio-group-modern">
                             <label class="radio-card active">
-                                <input type="radio" name="spouseSuccession" value="no" checked>
+                                <input type="radio" name="successionYn" value="N" checked>
                                 <span class="radio-content">
                                     <span class="radio-title">비승계</span>
                                     <span class="radio-desc">일반형</span>
                                 </span>
                             </label>
                             <label class="radio-card">
-                                <input type="radio" name="spouseSuccession" value="yes">
+                                <input type="radio" name="successionYn" value="Y">
                                 <span class="radio-content">
                                     <span class="radio-title">승계</span>
                                     <span class="radio-desc">배우자 보장</span>
@@ -101,14 +101,14 @@
                     <label>농지 평가 방식</label>
                     <div class="radio-group-modern">
                         <label class="radio-card active">
-                            <input type="radio" name="evalMethod" value="public" checked>
+                            <input type="radio" name="flndEvlMth" value="P" checked>
                             <span class="radio-content">
                                 <span class="radio-title">공시지가</span>
                                 <span class="radio-desc">100% 반영</span>
                             </span>
                         </label>
                         <label class="radio-card">
-                            <input type="radio" name="evalMethod" value="appraised">
+                            <input type="radio" name="flndEvlMth" value="R">
                             <span class="radio-content">
                                 <span class="radio-title">감정가</span>
                                 <span class="radio-desc">90% 반영</span>
@@ -118,9 +118,9 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="landValue">농지 가격</label>
+                    <label for="amount">농지 가격</label>
                     <div class="currency-input-wrapper">
-                        <input type="tel" id="landValue" placeholder="0" required inputmode="numeric">
+                        <input type="tel" id="amount" name="amount" placeholder="0" required inputmode="numeric">
                         <span class="currency-unit">원</span>
                     </div>
                     <p class="input-hint">적용 평가액: <span id="actualEvalAmount" class="highlight-text">0</span>원</p>
